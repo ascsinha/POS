@@ -31,7 +31,6 @@ def get_engine_url():
     except AttributeError:
         return str(get_engine().url).replace('%', '%%')
 
-
 # add your model's MetaData object here
 # for 'autogenerate' support
 # from myapp import mymodel
@@ -43,7 +42,6 @@ target_db = current_app.extensions['migrate'].db
 # can be acquired:
 # my_important_option = config.get_main_option("my_important_option")
 # ... etc.
-
 
 def get_metadata():
     if hasattr(target_db, 'metadatas'):
