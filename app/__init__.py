@@ -1,10 +1,12 @@
 from flask import Flask
-from .config import Config
-from .extensions import db, migrate, ma
-from .routes.messages import messages_bp
-from .routes.users import users_bp
 from marshmallow import ValidationError
 from werkzeug.exceptions import NotFound
+
+from .config import Config
+from .extensions import db, ma, migrate
+from .routes.messages import messages_bp
+from .routes.users import users_bp
+
 
 def create_app():
     app = Flask(__name__)
@@ -15,33 +17,21 @@ def create_app():
     migrate.init_app(app, db)
     ma.init_app(app)
 
-    # importar modelos
-    from .models import message
+    from .models import message, user  # noqa: F401
 
     app.register_blueprint(messages_bp, url_prefix="/messages")
     app.register_blueprint(users_bp, url_prefix="/users")
 
     @app.errorhandler(ValidationError)
     def handle_validation_error(err):
-        return {
-            "success": False,
-            "errors": err.messages
-        }, 400
-
+        return {"success": False, "errors": err.messages}, 400
 
     @app.errorhandler(NotFound)
     def handle_not_found(err):
-        return {
-            "success": False,
-            "message": "Recurso não encontrado"
-        }, 404
-
+        return {"success": False, "message": "Recurso nao encontrado"}, 404
 
     @app.errorhandler(404)
-    def handle_404_error(err):
-        return {
-            "success": False,
-            "message": "Rota não encontrada"
-        }, 404
+    def handle_404(err):
+        return {"success": False, "message": "Rota nao encontrada"}, 404
 
     return app

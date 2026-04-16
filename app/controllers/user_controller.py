@@ -1,15 +1,16 @@
 from app.extensions import db
 from app.models.user import User
-from app.schemas.user_schema import UserSchema 
+from app.schemas.user_schema import UserSchema
 from app.utils.response import success_response
+
 
 user_schema = UserSchema()
 users_schema = UserSchema(many=True)
 
 
 def listar_usuarios():
-    mensagens = User.query.all()
-    return success_response(user_schema.dump(mensagens))
+    usuarios = User.query.all()
+    return success_response(users_schema.dump(usuarios))
 
 
 def criar_usuario(data):
